@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IMDb Movie Search</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🎬 IMDb Movie Search</h1>
+      <p class="tagline">Find details about your favorite movies</p>
+    </header>
+    
+    <div class="search-container">
+      <div class="search-box">
+        <input type="text" id="searchBox" placeholder="Search for a movie..." />
+        <button id="searchBtn">Search</button>
+      </div>
+      <div id="suggestions"></div>
+    </div>
+    
+    <div class="loader" id="loader">
+      <div class="spinner"></div>
+    </div>
+    
+    <div id="movieDetails"></div>
+  </div>
+  
+  <script src="script.js"></script>
+</body>
+</html>
