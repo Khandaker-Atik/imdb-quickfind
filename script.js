@@ -7,7 +7,7 @@ function formatVotes(votesString) {
 }
 
 
-const API_BASE_URL = "https://custom-idm-search.onrender.com";
+const API_BASE_URL = "https:
 
 const searchBox = document.getElementById("searchBox");
 const searchBtn = document.getElementById("searchBtn");
@@ -15,7 +15,7 @@ const suggestions = document.getElementById("suggestions");
 const movieDetails = document.getElementById("movieDetails");
 const loader = document.getElementById("loader");
 
-// Debounce function
+
 function debounce(func, delay) {
   let timer;
   return function () {
@@ -28,7 +28,7 @@ function debounce(func, delay) {
   };
 }
 
-// Show suggestions as user types
+
 searchBox.addEventListener(
   "input",
   debounce(function () {
@@ -55,7 +55,7 @@ searchBox.addEventListener(
   }, 500)
 );
 
-// Display movie suggestions in dropdown
+
 function displaySuggestions(movies) {
   suggestions.innerHTML = "";
 
@@ -66,10 +66,10 @@ function displaySuggestions(movies) {
     const poster =
       movie.Poster !== "N/A"
         ? movie.Poster
-        : "https://via.placeholder.com/40x60?text=No+Image";
+        : "https:
 
     item.innerHTML = `
-      <img src="${poster}" alt="${movie.Title}" onerror="this.src='https://via.placeholder.com/40x60?text=Error'">
+      <img src="${poster}" alt="${movie.Title}" onerror="this.src='https:
       <div class="suggestion-details">
         <div class="suggestion-title">${movie.Title}</div>
         <div class="suggestion-year">${movie.Year}</div>
@@ -88,7 +88,7 @@ function displaySuggestions(movies) {
   suggestions.style.display = "block";
 }
 
-// Search button event listener
+
 searchBtn.addEventListener("click", () => {
   const query = searchBox.value.trim();
   if (query) {
@@ -97,7 +97,7 @@ searchBtn.addEventListener("click", () => {
   }
 });
 
-// Handle Enter key press in search box
+
 searchBox.addEventListener("keypress", (e) => {
   if (e.key === "Enter") {
     const query = searchBox.value.trim();
@@ -108,7 +108,7 @@ searchBox.addEventListener("keypress", (e) => {
   }
 });
 
-// Hide suggestions when clicking outside
+
 document.addEventListener("click", (e) => {
   if (!e.target.closest(".search-container")) {
     suggestions.style.display = "none";
@@ -154,12 +154,12 @@ function displayMovieDetails(movie) {
   const poster =
     movie.Poster !== "N/A"
       ? movie.Poster
-      : "https://via.placeholder.com/300x450?text=No+Image";
+      : "https:
 
   movieDetails.innerHTML = `
     <div class="movie-grid">
       <div class="poster-container">
-        <img src="${poster}" alt="${movie.Title}" onerror="this.src='https://via.placeholder.com/300x450?text=Error'">
+        <img src="${poster}" alt="${movie.Title}" onerror="this.src='https:
       </div>
       <div class="info-container">
         <h2 class="movie-title">${movie.Title}</h2>
