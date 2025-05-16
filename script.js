@@ -1,4 +1,12 @@
-// script.js - Fully Connected to Render Backend
+function formatVotes(votesString) {
+  if (!votesString || votesString === "N/A") return "N/A";
+  const num = parseInt(votesString.replace(/,/g, ""));
+  if (num >= 1_000_000) return (num / 1_000_000).toFixed(1).replace(/\.0$/, '') + "M";
+  if (num >= 1_000) return (num / 1_000).toFixed(1).replace(/\.0$/, '') + "K";
+  return num.toString();
+}
+
+
 const API_BASE_URL = "https://custom-idm-search.onrender.com";
 
 const searchBox = document.getElementById("searchBox");
@@ -163,16 +171,12 @@ function displayMovieDetails(movie) {
             .join("")}
         </div>
 
-        ${
-          movie.imdbRating !== "N/A"
-            ? `
-        <div class="rating">
-          <span class="rating-value">${movie.imdbRating}</span>
-          <span class="rating-count">IMDb Rating</span>
-        </div>
-        `
-            : ""
-        }
+        ${movie.imdbRating !== "N/A" ? `
+          <div class="rating">
+            <span class="rating-value">${movie.imdbRating}</span>
+            <span class="rating-count">IMDb (<span style="color:rgb(255, 251, 0);">${formatVotes(movie.imdbVotes)}</span> votes)</span>
+          </div>
+        ` : ''}
 
         <div class="movie-section">
           <h3 class="section-title">Overview</h3>
