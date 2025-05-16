@@ -7,7 +7,7 @@ function formatVotes(votesString) {
 }
 
 
-const API_BASE_URL = "https:
+const API_BASE_URL = "https://custom-idm-search.onrender.com";
 
 const searchBox = document.getElementById("searchBox");
 const searchBtn = document.getElementById("searchBtn");
@@ -66,10 +66,10 @@ function displaySuggestions(movies) {
     const poster =
       movie.Poster !== "N/A"
         ? movie.Poster
-        : "https:
+        : "https://via.placeholder.com/40x60?text=No+Image";
 
     item.innerHTML = `
-      <img src="${poster}" alt="${movie.Title}" onerror="this.src='https:
+      <img src="${poster}" alt="${movie.Title}" onerror="this.src='https://via.placeholder.com/40x60?text=Error'">
       <div class="suggestion-details">
         <div class="suggestion-title">${movie.Title}</div>
         <div class="suggestion-year">${movie.Year}</div>
@@ -96,7 +96,6 @@ searchBtn.addEventListener("click", () => {
     fetchMovieDetails(query);
   }
 });
-
 
 searchBox.addEventListener("keypress", (e) => {
   if (e.key === "Enter") {
@@ -154,12 +153,12 @@ function displayMovieDetails(movie) {
   const poster =
     movie.Poster !== "N/A"
       ? movie.Poster
-      : "https:
+      : "https://via.placeholder.com/300x450?text=No+Image";
 
   movieDetails.innerHTML = `
     <div class="movie-grid">
       <div class="poster-container">
-        <img src="${poster}" alt="${movie.Title}" onerror="this.src='https:
+        <img src="${poster}" alt="${movie.Title}" onerror="this.src='https://via.placeholder.com/300x450?text=Error'">
       </div>
       <div class="info-container">
         <h2 class="movie-title">${movie.Title}</h2>
