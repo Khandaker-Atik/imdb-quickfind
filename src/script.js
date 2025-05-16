@@ -1,4 +1,6 @@
-// script.js - Modified to work with our serverless API
+// script.js - Fully Connected to Render Backend
+const API_BASE_URL = "https://custom-idm-search.onrender.com";
+
 const searchBox = document.getElementById("searchBox");
 const searchBtn = document.getElementById("searchBtn");
 const suggestions = document.getElementById("suggestions");
@@ -8,7 +10,7 @@ const loader = document.getElementById("loader");
 // Debounce function
 function debounce(func, delay) {
   let timer;
-  return function() {
+  return function () {
     const context = this;
     const args = arguments;
     clearTimeout(timer);
@@ -19,39 +21,45 @@ function debounce(func, delay) {
 }
 
 // Show suggestions as user types
-searchBox.addEventListener("input", debounce(function() {
-  const query = searchBox.value.trim();
-  
-  if (query.length < 3) {
-    suggestions.style.display = "none";
-    return;
-  }
-  
-  fetch(`/api/movies?s=${encodeURIComponent(query)}`)
-    .then(res => res.json())
-    .then(data => {
-      if (data.Response === "True" && data.Search) {
-        displaySuggestions(data.Search.slice(0, 5));
-      } else {
-        suggestions.style.display = "none";
-      }
-    })
-    .catch(err => {
-      console.error("Error fetching suggestions:", err);
+searchBox.addEventListener(
+  "input",
+  debounce(function () {
+    const query = searchBox.value.trim();
+
+    if (query.length < 3) {
       suggestions.style.display = "none";
-    });
-}, 500));
+      return;
+    }
+
+    fetch(`${API_BASE_URL}/api/movies?s=${encodeURIComponent(query)}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.Response === "True" && data.Search) {
+          displaySuggestions(data.Search.slice(0, 5));
+        } else {
+          suggestions.style.display = "none";
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching suggestions:", err);
+        suggestions.style.display = "none";
+      });
+  }, 500)
+);
 
 // Display movie suggestions in dropdown
 function displaySuggestions(movies) {
   suggestions.innerHTML = "";
-  
-  movies.forEach(movie => {
+
+  movies.forEach((movie) => {
     const item = document.createElement("div");
     item.className = "suggestion-item";
-    
-    const poster = movie.Poster !== "N/A" ? movie.Poster : "https://via.placeholder.com/40x60?text=No+Image";
-    
+
+    const poster =
+      movie.Poster !== "N/A"
+        ? movie.Poster
+        : "https://via.placeholder.com/40x60?text=No+Image";
+
     item.innerHTML = `
       <img src="${poster}" alt="${movie.Title}" onerror="this.src='https://via.placeholder.com/40x60?text=Error'">
       <div class="suggestion-details">
@@ -59,16 +67,16 @@ function displaySuggestions(movies) {
         <div class="suggestion-year">${movie.Year}</div>
       </div>
     `;
-    
+
     item.addEventListener("click", () => {
       searchBox.value = movie.Title;
       suggestions.style.display = "none";
       fetchMovieDetails(movie.Title);
     });
-    
+
     suggestions.appendChild(item);
   });
-  
+
   suggestions.style.display = "block";
 }
 
@@ -102,12 +110,12 @@ document.addEventListener("click", (e) => {
 function fetchMovieDetails(movieName) {
   loader.style.display = "block";
   movieDetails.style.display = "none";
-  
-  fetch(`/api/movies?t=${encodeURIComponent(movieName)}`)
-    .then(res => res.json())
-    .then(data => {
+
+  fetch(`${API_BASE_URL}/api/movies?t=${encodeURIComponent(movieName)}`)
+    .then((res) => res.json())
+    .then((data) => {
       loader.style.display = "none";
-      
+
       if (data.Response === "False") {
         movieDetails.innerHTML = `
           <div class="error-message">
@@ -118,10 +126,10 @@ function fetchMovieDetails(movieName) {
         movieDetails.style.display = "block";
         return;
       }
-      
+
       displayMovieDetails(data);
     })
-    .catch(error => {
+    .catch((error) => {
       loader.style.display = "none";
       console.error("Error:", error);
       movieDetails.innerHTML = `
@@ -135,8 +143,11 @@ function fetchMovieDetails(movieName) {
 }
 
 function displayMovieDetails(movie) {
-  const poster = movie.Poster !== "N/A" ? movie.Poster : "https://via.placeholder.com/300x450?text=No+Image";
-  
+  const poster =
+    movie.Poster !== "N/A"
+      ? movie.Poster
+      : "https://via.placeholder.com/300x450?text=No+Image";
+
   movieDetails.innerHTML = `
     <div class="movie-grid">
       <div class="poster-container">
@@ -145,42 +156,52 @@ function displayMovieDetails(movie) {
       <div class="info-container">
         <h2 class="movie-title">${movie.Title}</h2>
         <div class="movie-year">${movie.Year} • ${movie.Runtime}</div>
-        
+
         <div class="movie-meta">
-          ${movie.Genre.split(', ').map(genre => `<span class="meta-item">${genre}</span>`).join('')}
+          ${movie.Genre.split(", ")
+            .map((genre) => `<span class="meta-item">${genre}</span>`)
+            .join("")}
         </div>
-        
-        ${movie.imdbRating !== "N/A" ? `
+
+        ${
+          movie.imdbRating !== "N/A"
+            ? `
         <div class="rating">
           <span class="rating-value">${movie.imdbRating}</span>
           <span class="rating-count">IMDb Rating</span>
         </div>
-        ` : ''}
-        
+        `
+            : ""
+        }
+
         <div class="movie-section">
           <h3 class="section-title">Overview</h3>
           <p>${movie.Plot}</p>
         </div>
-        
+
         <div class="movie-section">
           <h3 class="section-title">Cast</h3>
           <p>${movie.Actors}</p>
         </div>
-        
+
         <div class="movie-section">
           <h3 class="section-title">Director</h3>
           <p>${movie.Director}</p>
         </div>
-        
-        ${movie.Awards !== "N/A" ? `
+
+        ${
+          movie.Awards !== "N/A"
+            ? `
         <div class="movie-section">
           <h3 class="section-title">Awards</h3>
           <p>${movie.Awards}</p>
         </div>
-        ` : ''}
+        `
+            : ""
+        }
       </div>
     </div>
   `;
-  
+
   movieDetails.style.display = "block";
 }
